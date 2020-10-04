@@ -13,6 +13,6 @@ subtitle: Data Privacy and Anonymization
 
 ## 학습목차 
 
-1. [가짜 데이터 (fake data)](ingest-fake-data.html)
+1. [가짜 데이터 (fake data)](fake-data.html)
 1. [데이터 익명화](anonymization.html)
 
