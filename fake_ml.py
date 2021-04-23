@@ -30,6 +30,7 @@ plot_data_points(x, y)
 
 from faker import Faker
 import pandas as pd
+import numpy as np
 import random
 from datetime import datetime
 
@@ -37,6 +38,7 @@ fake = Faker('ko_KR')
 
 def create_rows_faker(num=1):
     output = [{"name"       : fake.name(),
+               "ssn"        : fake.ssn(),
                "address"    : fake.address(),
                "latlng"     : fake.latlng(),
                "gender"     : np.random.choice(["M", "F"], p=[0.5, 0.5]),
@@ -45,11 +47,12 @@ def create_rows_faker(num=1):
                "company"    : fake.company(),
                "job"        : fake.job(),
                "ip_address" : fake.ipv4(network=False, address_class=None, private=None),
-               "date_of_birth": fake.date_between_dates(date_start=datetime(2015,1,1), date_end=datetime(2019,12,31)),
+               "date_of_birth": fake.date_between_dates(date_start=datetime(1950,1,1), date_end=datetime(2000,12,31)).strftime("%Y-%m-%d"),
                "credit_card_full": fake.credit_card_full(card_type=None),
-               "salary"     : np.random.lognormal(3000, 1000)} for x in range(num)]
+               "salary"     : np.random.lognormal(3, 1)} for x in range(num)]
     return output
 
 df_faker = pd.DataFrame(create_rows_faker(100))
 
-df_faker['date_of_birth']
+df_faker.to_csv("faked.csv")
+
