@@ -116,6 +116,7 @@ faked_tbl %>%
 ## 극단값 {#data-aggregation-evt}
 
 최대 혹은 최소값을 갖는 경우 누구인지 확연히 알 수 있기 때문에 상위 $x$%에 포함되는 값을 특정 값을 대체하여 개인을 식별할 수 없도록 조치를 취한다. 상위 90% 이상 되는 연봉은 90분위 연봉으로 치환을 했기 때문에 고연봉을 받는 사람을 비식별화시킬 수 있다.
+상단 극한값을 특정 값으로 치환하는 것은 `top coding`, 그 반대로 하단 극한값을 특정 값으로 치환하는 것을 `bottom coding`이라고 한다.
 
 ```{r data-evt}
 faked_tbl %>% 
@@ -128,6 +129,40 @@ faked_tbl %>%
     theme_minimal(base_family = "NanumGothic")
 ```
 
+# 데이터 합성 {#data-synthesis}
+
+데이터 합성(Data Synthesis)은 연속형 혹은 범주형 변수가 특정 분포를 따른다고 가정하고 모수 값을 추정하여 이를 바탕으로 변수 관측점을 난수로 생성시키는 기법이다. 예를 들어, 성별은 남녀로 0.5 확률을 갖는 이항분포를 따르는 난수에서 나온다고 가정하면 다음과 같이 성별에 대한 분포특성을 유지하면서 데이터를 새롭게 합성할 수 있다.
+
+```{r data-synthesis-categorical}
+faked_tbl %>% 
+  mutate(성별 = rbinom(n(), 1, 0.5)) %>% 
+  select(name, gender, 성별)
+```
+
+연속형 변수의 경우 정규분포를 가정하고 평균과 표준편차 모수를 추출한 후에 이를 바탕으로 연봉을 익명화시켜 데이터를 복원한다.
+
+```{r data-synthesis}
+salary_params <- faked_tbl %>% 
+  mutate(연봉 = log(salary)) %>% 
+  summarise_at(vars(연봉), list(mean = mean, sd = sd))
+
+salary_params
+```
+
+연봉 원본 변수와 정규분포에서 추출한 난수와 분포를 비교하기 위해 밀도 그래프를 그려 시각화해서 비교해보자.
+
+```{r data-synthesis-normal}
+faked_tbl %>% 
+  mutate(연봉 = rnorm(n(), salary_params$mean, salary_params$sd)) %>% 
+  mutate(연봉 = exp(연봉)) %>% 
+  select(salary, 연봉) %>% 
+  pivot_longer(cols = salary:연봉, names_to = "구분", values_to = "연봉") %>% 
+  ggplot(aes(x=연봉, color = 구분)) +
+    geom_density() +
+    theme_minimal(base_family = "NanumGothic") +
+    theme(legend.position = "none")
+```
+
 # K-익명성 {#K-anonymity}
 
 K-익명성 (K-anonymity)
@@ -135,4 +170,5 @@ K-익명성 (K-anonymity)
 # 차등 프라이버시 {#dp}
 
 차등 프라이버시(Differential Privacy, DP)
+
 

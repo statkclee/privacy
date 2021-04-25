@@ -10,26 +10,17 @@
 
 
 
-<meta name="date" content="2021-04-23" />
+<meta name="date" content="2021-04-25" />
 
 <title>개인정보와 익명화</title>
 
-<script src="anonymization_files/header-attrs-2.7/header-attrs.js"></script>
+<script src="anonymization_files/header-attrs-2.6/header-attrs.js"></script>
 <script src="anonymization_files/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="anonymization_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="anonymization_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="anonymization_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="anonymization_files/bootstrap-3.3.5/shim/respond.min.js"></script>
-<style>h1 {font-size: 34px;}
-       h1.title {font-size: 38px;}
-       h2 {font-size: 30px;}
-       h3 {font-size: 24px;}
-       h4 {font-size: 18px;}
-       h5 {font-size: 16px;}
-       h6 {font-size: 12px;}
-       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
-       pre:not([class]) { background-color: white }</style>
 <script src="anonymization_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
 <link href="anonymization_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="anonymization_files/tocify-1.9.1/jquery.tocify.js"></script>
@@ -46,19 +37,11 @@
     </style>
 
 
-<style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
-</style>
+<style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
@@ -149,31 +132,40 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
   }
 })();
 </script>
-
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
 
 
 <style type="text/css">
-/* for pandoc --citeproc since 2.11 */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
+h1 {
+  font-size: 34px;
 }
-.hanging div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
+h1.title {
+  font-size: 38px;
 }
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
+h2 {
+  font-size: 30px;
 }
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
+h3 {
+  font-size: 24px;
 }
-div.csl-indent {
-  margin-left: 2em;
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
 }
 </style>
+
 
 
 
@@ -183,6 +175,10 @@ div.csl-indent {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -199,9 +195,6 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
-pre code {
-  padding: 0;
-}
 </style>
 
 
@@ -214,6 +207,7 @@ pre code {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
+  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -342,13 +336,13 @@ div.tocify {
 
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row">
-<div class="col-sm-12 col-md-4 col-lg-3">
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
 </div>
 
-<div class="toc-content col-sm-12 col-md-8 col-lg-9">
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -375,11 +369,11 @@ div.tocify {
   gtag('config', 'UA-59802572-23');
 </script>
 
-<div id="header">
+<div class="fluid-row" id="header">
 
-<div class="btn-group pull-right float-right">
-<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
 <li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
 <li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
 </ul>
@@ -391,7 +385,7 @@ div.tocify {
 <h3 class="subtitle">익명화 (Anonymization)</h3>
 <h4 class="author">이광춘</h4>
 <address class="author_afil">
-<a href="https://www.facebook.com/groups/tidyverse/">Tidyverse Korea</a><br><h4 class="date">2021-04-23</h4>
+<a href="https://www.facebook.com/groups/tidyverse/">Tidyverse Korea</a><br><h4 class="date">2021-04-25</h4>
 
 </div>
 
@@ -465,14 +459,14 @@ div.tocify {
 <div id="data-masking" class="section level2" number="4.1">
 <h2 number="4.1"><span class="header-section-number">4.1</span> 데이터 마스킹(Masking)</h2>
 <p>파이썬 <code>faker</code> 팩키지를 통해 생성한 데이터에 주민번호를 만들어내고 주민번호 전체를 마스킹하거나 출생연도와 성별만 주민번호를 통해 저장시키고 나머지 모든 주민번호 관련 숫자를 마스킹 처리한다.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>faked_tbl <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/faked.csv&quot;</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>faked_tbl <span class="sc">%&gt;%</span> </span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">masked_ssn =</span> <span class="fu">str_replace_all</span>(ssn, <span class="st">&quot;[0-9]&quot;</span>, <span class="st">&quot;*&quot;</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">masked_dob_ssn  =</span> glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">&quot;{str_sub(ssn, 1,2)}****-{str_sub(ssn, 8,8)}******&quot;</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name, ssn, masked_ssn, masked_dob_ssn)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>faked_tbl &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/faked.csv&quot;</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>faked_tbl <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">masked_ssn =</span> <span class="kw">str_replace_all</span>(ssn, <span class="st">&quot;[0-9]&quot;</span>, <span class="st">&quot;*&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">masked_dob_ssn  =</span> glue<span class="op">::</span><span class="kw">glue</span>(<span class="st">&quot;{str_sub(ssn, 1,2)}****-{str_sub(ssn, 8,8)}******&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(name, ssn, masked_ssn, masked_dob_ssn)</span></code></pre></div>
 <pre><code># A tibble: 100 x 4
    name   ssn            masked_ssn     masked_dob_ssn
    &lt;chr&gt;  &lt;chr&gt;          &lt;chr&gt;          &lt;glue&gt;        
@@ -486,42 +480,42 @@ div.tocify {
  8 최정숙 970718-1829726 ******-******* 97****-1******
  9 이지우 180025-2247415 ******-******* 18****-2******
 10 안상훈 740900-1475456 ******-******* 74****-1******
-# … with 90 more rows</code></pre>
+# ... with 90 more rows</code></pre>
 </div>
 <div id="data-removing" class="section level2" number="4.2">
 <h2 number="4.2"><span class="header-section-number">4.2</span> 이름 치환</h2>
 <p>이름을 앞서와 마찬가지로 마스킹해서 처리할 수도 있으나, 전혀 새로운 이름으로 치환해서 대체하는 것도 비식별화시키는 방법중의 하나가 된다. CSV 파일을 파이썬 판다스로 불러읽어들인 후에 <code>faker</code>를 사용해서 해당 이름에 다른 이름을 넣는 것이다.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> faker <span class="im">import</span> Faker</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>fake_data <span class="op">=</span> Faker(<span class="st">&#39;ko_KR&#39;</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>faker_pd <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/faked.csv&quot;</span>)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>faker_pd[<span class="st">&quot;가명&quot;</span>] <span class="op">=</span> faker_pd[<span class="st">&#39;name&#39;</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: fake_data.name())</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>faker_pd[[<span class="st">&quot;name&quot;</span>, <span class="st">&quot;ssn&quot;</span>, <span class="st">&quot;가명&quot;</span>]]</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="im">from</span> faker <span class="im">import</span> Faker</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>fake_data <span class="op">=</span> Faker(<span class="st">&#39;ko_KR&#39;</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a>faker_pd <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/faked.csv&quot;</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a>faker_pd[<span class="st">&quot;가명&quot;</span>] <span class="op">=</span> faker_pd[<span class="st">&#39;name&#39;</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: fake_data.name())</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a>faker_pd[[<span class="st">&quot;name&quot;</span>, <span class="st">&quot;ssn&quot;</span>, <span class="st">&quot;가명&quot;</span>]]</span></code></pre></div>
 <pre><code>   name             ssn   가명
-0   이경자  510509-1814474  김민준
-1   이은경  910719-1056112  김혜진
-2   김성진  750318-2013376  박정숙
-3   박승민  910028-1278202  김예준
-4   박상철  390906-1877754  정순자
+0   이경자  510509-1814474  서서윤
+1   이은경  910719-1056112  배예지
+2   김성진  750318-2013376  김성훈
+3   박승민  910028-1278202  김지후
+4   박상철  390906-1877754  이영자
 ..  ...             ...  ...
-95  최명자  920515-1087235  최지우
-96  우지연  390300-1639266  이서준
-97  류숙자  390022-1544706  손준영
-98  류정남  350521-2866730  유준혁
-99  박상철  400325-1307515  윤지은
+95  최명자  920515-1087235  김현지
+96  우지연  390300-1639266  박채원
+97  류숙자  390022-1544706  곽아름
+98  류정남  350521-2866730  배영환
+99  박상철  400325-1307515  남아름
 
 [100 rows x 3 columns]</code></pre>
 </div>
 <div id="data-aggregation" class="section level2" number="4.3">
 <h2 number="4.3"><span class="header-section-number">4.3</span> 총계 혹은 범주화</h2>
 <p>데이터를 익명화하기 위해 총계(aggregation) 혹은 범주화 기법을 사용해서 비식별화한다.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>faked_tbl <span class="sc">%&gt;%</span> </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">salary_agg =</span> <span class="fu">ifelse</span>(salary <span class="sc">&gt;=</span> <span class="fu">quantile</span>(salary, .<span class="dv">7</span>), <span class="st">&quot;많음&quot;</span>, <span class="st">&quot;적음&quot;</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name, salary, salary_agg)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>faked_tbl <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">salary_agg =</span> <span class="kw">ifelse</span>(salary <span class="op">&gt;=</span><span class="st"> </span><span class="kw">quantile</span>(salary, <span class="fl">.7</span>), <span class="st">&quot;많음&quot;</span>, <span class="st">&quot;적음&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(name, salary, salary_agg)</span></code></pre></div>
 <pre><code># A tibble: 100 x 3
    name   salary salary_agg
    &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;     
@@ -535,32 +529,74 @@ div.tocify {
  8 최정숙  12.9  적음      
  9 이지우   4.72 적음      
 10 안상훈  29.9  많음      
-# … with 90 more rows</code></pre>
+# ... with 90 more rows</code></pre>
 </div>
 <div id="data-aggregation-evt" class="section level2" number="4.4">
 <h2 number="4.4"><span class="header-section-number">4.4</span> 극단값</h2>
-<p>최대 혹은 최소값을 갖는 경우 누구인지 확연히 알 수 있기 때문에 상위 <span class="math inline">\(x\)</span>%에 포함되는 값을 특정 값을 대체하여 개인을 식별할 수 없도록 조치를 취한다. 상위 90% 이상 되는 연봉은 90분위 연봉으로 치환을 했기 때문에 고연봉을 받는 사람을 비식별화시킬 수 있다.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>faked_tbl <span class="sc">%&gt;%</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">salary_minmax =</span> <span class="fu">ifelse</span>(salary <span class="sc">&gt;=</span> <span class="fu">quantile</span>(salary, .<span class="dv">9</span>), <span class="fu">quantile</span>(salary, .<span class="dv">9</span>), salary)) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name, salary, salary_minmax) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(salary<span class="sc">:</span>salary_minmax, <span class="at">names_to =</span> <span class="st">&quot;구분&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;연봉&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>연봉)) <span class="sc">+</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>구분) <span class="sc">+</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_family =</span> <span class="st">&quot;NanumGothic&quot;</span>)</span></code></pre></div>
+<p>최대 혹은 최소값을 갖는 경우 누구인지 확연히 알 수 있기 때문에 상위 <span class="math inline">\(x\)</span>%에 포함되는 값을 특정 값을 대체하여 개인을 식별할 수 없도록 조치를 취한다. 상위 90% 이상 되는 연봉은 90분위 연봉으로 치환을 했기 때문에 고연봉을 받는 사람을 비식별화시킬 수 있다. 상단 극한값을 특정 값으로 치환하는 것은 <code>top coding</code>, 그 반대로 하단 극한값을 특정 값으로 치환하는 것을 <code>bottom coding</code>이라고 한다.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a>faked_tbl <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">salary_minmax =</span> <span class="kw">ifelse</span>(salary <span class="op">&gt;=</span><span class="st"> </span><span class="kw">quantile</span>(salary, <span class="fl">.9</span>), <span class="kw">quantile</span>(salary, <span class="fl">.9</span>), salary)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(name, salary, salary_minmax) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">pivot_longer</span>(salary<span class="op">:</span>salary_minmax, <span class="dt">names_to =</span> <span class="st">&quot;구분&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;연봉&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>연봉)) <span class="op">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a><span class="st">    </span><span class="kw">geom_histogram</span>() <span class="op">+</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a><span class="st">    </span><span class="kw">facet_wrap</span>(<span class="op">~</span>구분) <span class="op">+</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true"></a><span class="st">    </span><span class="kw">theme_minimal</span>(<span class="dt">base_family =</span> <span class="st">&quot;NanumGothic&quot;</span>)</span></code></pre></div>
 <p><img src="anonymization_files/figure-html/data-evt-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
-<div id="K-anonymity" class="section level1" number="5">
-<h1 number="5"><span class="header-section-number">5</span> K-익명성</h1>
+<div id="data-synthesis" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> 데이터 합성</h1>
+<p>데이터 합성(Data Synthesis)은 연속형 혹은 범주형 변수가 특정 분포를 따른다고 가정하고 모수 값을 추정하여 이를 바탕으로 변수 관측점을 난수로 생성시키는 기법이다. 예를 들어, 성별은 남녀로 0.5 확률을 갖는 이항분포를 따르는 난수에서 나온다고 가정하면 다음과 같이 성별에 대한 분포특성을 유지하면서 데이터를 새롭게 합성할 수 있다.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>faked_tbl <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(성별 =<span class="st"> </span><span class="kw">rbinom</span>(<span class="kw">n</span>(), <span class="dv">1</span>, <span class="fl">0.5</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(name, gender, 성별)</span></code></pre></div>
+<pre><code># A tibble: 100 x 3
+   name   gender  성별
+   &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt;
+ 1 이경자 F          0
+ 2 이은경 M          0
+ 3 김성진 F          1
+ 4 박승민 M          1
+ 5 박상철 F          1
+ 6 류지우 F          1
+ 7 문현숙 F          0
+ 8 최정숙 F          0
+ 9 이지우 F          1
+10 안상훈 M          0
+# ... with 90 more rows</code></pre>
+<p>연속형 변수의 경우 정규분포를 가정하고 평균과 표준편차 모수를 추출한 후에 이를 바탕으로 연봉을 익명화시켜 데이터를 복원한다.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a>salary_params &lt;-<span class="st"> </span>faked_tbl <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(연봉 =<span class="st"> </span><span class="kw">log</span>(salary)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">summarise_at</span>(<span class="kw">vars</span>(연봉), <span class="kw">list</span>(<span class="dt">mean =</span> mean, <span class="dt">sd =</span> sd))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a>salary_params</span></code></pre></div>
+<pre><code># A tibble: 1 x 2
+   mean    sd
+  &lt;dbl&gt; &lt;dbl&gt;
+1  2.91 0.939</code></pre>
+<p>연봉 원본 변수와 정규분포에서 추출한 난수와 분포를 비교하기 위해 밀도 그래프를 그려 시각화해서 비교해보자.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a>faked_tbl <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(연봉 =<span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">n</span>(), salary_params<span class="op">$</span>mean, salary_params<span class="op">$</span>sd)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(연봉 =<span class="st"> </span><span class="kw">exp</span>(연봉)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(salary, 연봉) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> salary<span class="op">:</span>연봉, <span class="dt">names_to =</span> <span class="st">&quot;구분&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;연봉&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>연봉, <span class="dt">color =</span> 구분)) <span class="op">+</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true"></a><span class="st">    </span><span class="kw">geom_density</span>() <span class="op">+</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true"></a><span class="st">    </span><span class="kw">theme_minimal</span>(<span class="dt">base_family =</span> <span class="st">&quot;NanumGothic&quot;</span>) <span class="op">+</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
+<p><img src="anonymization_files/figure-html/data-synthesis-normal-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="K-anonymity" class="section level1" number="6">
+<h1 number="6"><span class="header-section-number">6</span> K-익명성</h1>
 <p>K-익명성 (K-anonymity)</p>
 </div>
-<div id="dp" class="section level1" number="6">
-<h1 number="6"><span class="header-section-number">6</span> 차등 프라이버시</h1>
+<div id="dp" class="section level1" number="7">
+<h1 number="7"><span class="header-section-number">7</span> 차등 프라이버시</h1>
 <p>차등 프라이버시(Differential Privacy, DP)</p>
-<div id="refs" class="references csl-bib-body">
-<div id="ref-kim2016" class="csl-entry">
-1. 김혜련. 통계적 목적의 개인정보보호와 비식별화. 통계연구. 2016;특별호:35–51.
+<div id="refs" class="references">
+<div id="ref-kim2016">
+<p>1. 김혜련. 통계적 목적의 개인정보보호와 비식별화. 통계연구. 2016;특별호:35–51.</p>
 </div>
 </div>
 </div>
@@ -610,7 +646,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open');
+    $(this).parent().toggleClass('nav-tabs-open')
   });
 });
 </script>
