@@ -1,0 +1,86 @@
+---
+layout: page
+title: "개인정보와 익명화"
+subtitle: "K-익명성 (K-Anonymity)"
+author:
+- name: "이광춘"
+  affiliation: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
+date: "`r Sys.Date()`"
+tags: ["데이터 과학", "Data Science", "데이터 사이언스", "모조 데이터", "fake data", "K-Anonymity", "K-익명성"]
+output:
+  html_document: 
+    include:
+      after_body: footer.html
+      before_body: header.html
+    toc: yes
+    toc_depth: 2
+    toc_float: true
+    highlight: tango
+    code_folding: show
+    number_section: true
+    self_contained: false
+bibliography: bibliography_privacy.bib
+csl: biomed-central.csl
+urlcolor: blue
+linkcolor: blue
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,
+                      comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+```
+
+# 모자이크 효과 {#mosaic-effect}
+
+**모자이크 효과(Mosaic Effect)**는 Vivek Kundra로부터 유래하고 있으며 독립적으로 공개되는 개별 정보조각이 민감정보는 아닐 수 있지만, 결합되게 된다면 국가안보에 핵심적인 정보가 되거나 개인을 특정할 수 있는데 오용될 수 있음을 나타낸다.
+
+
+# K-익명성 [^wiki-k] {#wiki-k-anonymity}
+
+[^wiki-k]: [`k`-anonymity](https://en.wikipedia.org/wiki/K-anonymity)
+
+K-익명성은 Latanya Sweeney and Pierangela Samarati 두 저자가 1998년 제안한 방법론으로, 데이터가 실무적으로 유용하도록 특성을 유지하면서도 당사자가 재식별이 되지 않도록 데이터를 과학적으로 공개하는 것이다.[@samarati1998protecting]
+
+코치(Kochi) 병원의 환자 정보가 다음과 같이 있다고 가정하자. 이를 비식별화하는 방법은 Suppressiondhk Generalization 이 있고, 2-익명성을 달성하도록 비식별화해보자.
+
+```{r k-anonymous}
+library(tidyverse)
+library(rvest)
+
+patient_tbl <- read_html("https://en.wikipedia.org/wiki/K-anonymity") %>% 
+  html_node(xpath = '//*[@id="mw-content-text"]/div[1]/center[1]/table') %>% 
+  html_table(header = TRUE, fill = TRUE) %>% 
+  as_tibble %>% 
+  janitor::clean_names()
+
+patient_tbl
+```
+
+이름(`name`)과 종교(`religion`)를 *****으로 Suppresion 시켰으며, 나이를 `'20 < Age ≤ 30'`와 같이 일반화시켰다.
+
+```{r k-anonymous-run}
+anonymous_tbl <- read_html("https://en.wikipedia.org/wiki/K-anonymity") %>% 
+  html_node(xpath = '//*[@id="mw-content-text"]/div[1]/center[2]/table') %>% 
+  html_table(header = TRUE, fill = TRUE) %>% 
+  as_tibble %>% 
+  janitor::clean_names()
+
+anonymous_tbl
+```
+
+나이(age), 성별(gender), 거주지(state_of_domicile) 에 따라 2-익명성이 확보된 것을 확인할 수 있다.
+
+```{r k-anonymous-check}
+anonymous_tbl %>% 
+  count(age, gender, state_of_domicile)
+```
+
+
+
+
+
+
+
