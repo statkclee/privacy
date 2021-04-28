@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+<meta name="date" content="2021-04-28" />
+
+<title>개인정보와 익명화</title>
+
+<script src="dp_files/header-attrs-2.7/header-attrs.js"></script>
+<script src="dp_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="dp_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="dp_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="dp_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="dp_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="dp_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="dp_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="dp_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="dp_files/navigation-1.1/tabsets.js"></script>
+<script src="dp_files/navigation-1.1/codefolding.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-sm-12 col-md-4 col-lg-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-sm-12 col-md-8 col-lg-9">
+
+
+
+<!-- <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+<link rel="stylesheet" type="text/css" href="css/swc.css" />  -->
+<link rel="alternate" type="application/rss+xml" title="Tidyverse Korea" href="https://www.facebook.com/groups/tidyverse/"/>
+<meta charset="UTF-8" />
+
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+  <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-59802572-23"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-59802572-23');
+</script>
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">개인정보와 익명화</h1>
+<h3 class="subtitle">차분 프라이버시(DP, Differential Privacy)</h3>
+<h4 class="author">이광춘</h4>
+<address class="author_afil">
+<a href="https://www.facebook.com/groups/tidyverse/">Tidyverse Korea</a><br><h4 class="date">2021-04-28</h4>
+
+</div>
+
+
+<iframe width="300" height="180" src="https://www.youtube.com/embed/pT19VwBAqKA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+<div id="dp" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> 차분 프라이버시</h1>
+<p>차분 프라이버시(Differential Privacy)는 프라이버시를 정량적으로 모델화하여 프라이버시 보호 정도를 측정할 수 있는 기술·방법론으로 데이터의 분포 특성을 유지하여 데이터의 유용성(Utility)은 유지하면서도 개인정보를 보호하기 위해 잡을 추가하는 기법이다. 즉 프라이버시를 일부 희생하면서 원본 데이터와 마찬가지로 높은 정확성을 갖는 특성을 갖도록 데이터를 익명화시키는 것이 중요하다. 왜냐하면, 프라이버시와 데이터의 유용성 즉, 정확도는 상호 주고받는 트레이드 오프(Trade-off)가 존재하기 때문이다.</p>
+<p><img src="fig/dp-accuracy-privacy.png" /></p>
+<div id="dp-framework" class="section level2" number="1.1">
+<h2 number="1.1"><span class="header-section-number">1.1</span> DP 얼개</h2>
+<p>차분 프라이버시를 구현하는 프레임워크로 크게 “지역 모델”과 “Trusted Curator 모델”이 있다.</p>
+<ul>
+<li><strong>신뢰할 수 있는 큐레이터 모델</strong>: 전체 데이터를 취합하여 노이즈 삽입 수준을 결정할 수 있으므로 데이터 유용성과 프라이버시 보호에 있어 효율적이나, 해당 작업을 처리하는 큐레이터를 신뢰해야 한다는 단점이 있다.</li>
+<li><strong>지역 모델</strong>: 개인이 노이즈를 삽입하여 큐레이터에게 전송하므로 신뢰할 수 있는 큐레이터의 존재가 필요하지 않아 개인의 프라이버시를 원천적으로 보호할 수 있어 구글 및 애플에서 채택하고 있다. 그러나 신뢰할 수 있는 큐레이터 모델에 비해 데이터 유용성이 크게 저하될 수 있으며, 현재의 지역 모델에서는 사용자가 임의로 노이즈 삽입 수준을 결정할 수 없다는 단점이 있다.</li>
+</ul>
+<p><img src="fig/dp-framework.png" /></p>
+</div>
+<div id="dp-example" class="section level2" number="1.2">
+<h2 number="1.2"><span class="header-section-number">1.2</span> 외부 공개 정보 위험 <span class="citation">[1]</span></h2>
+<p>국내 웹 이용자의 대부분이 포털사이트에서 제공하는 뉴스, 카페, 블로그, 웹툰, 영화 등의 서비스와 온라인 커뮤니티에서 제공하는 게시판 서비스를 사용하고 있고 이를 조합하게 되면 특정 사용자를 식별하는게 가능하다. 비식별 데이터를 연계하게 되면 공통 ID를 중심으로 확장된 개인정보 추출 및 복원이 가능하다.</p>
+<p><img src="fig/dp-examples.png" /></p>
+</div>
+</div>
+<div id="failure-privacy" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> 비식별화 실패 사례 <span class="citation">[2]</span></h1>
+<p>개인정보가 가려졌다고 판단되어 공개된 데이터 중 일부는 다양한 비식별화기법에 의해 무용지물이 된 사례가 있다. 대표적으로 거론되는 글로벌 사례로 AOL, Netflix, 마사추세츠 의료기록 데이터베이스가 회자된다.</p>
+<p>준식별자(Quasi- identifier, QID)인 우편번호, 성별, 생일 만으로 미국 인구의 87%가 재식별화가 가능함이 Sweeny에 의해 밝혀져 식별자(Identifier, ID)가 제거된 데이터라도 안전하지 않음이 확인되었다. K-익명성은 QID(Quasi-Identifier)로 재식별화를 방지하기 위해서 적어도 해당 그룹에 적어도 K명이 존재하기 때문에 <span class="math inline">\(\frac{1}{k}\)</span> 만큼의 안정성을 보장한다.</p>
+<p>인터넷 미디어 스트리밍 서비스를 제공하는 넷플릭스(Netflix)는 사용자들의 성향을 분석해 보다 나은 미디 어 추천 서비스를 제공하기 위해 기존의 모델을 통해 비식별화 된 데이터를 공개하고 이를 이용해 가장 효율 적인 추천 시스템을 만든 팀에게 100만 달러를 수여하 는 Netflix prize를 개최하였다. 하지만 이는 동일한 서비스를 제공하는 IMDB사에서 공개한 비식별화 된 데이터베이스와의 연결(linkage)로 인해 재식별화가 가능함이 발견되었다. <span class="citation">[3]</span></p>
+<p>메사추세츠 보험 위원회(Massachusetts Group Insurance Commission, GIC)의 비식별화 된 의료기록 데이터 베이스 역시 유권자 등록 데이터베이스와의 연결로 인해 재식별화 되었다.<span class="citation">[4]</span></p>
+<p>교차검색을 통한 재식별화의 가능성을 차단하지 못하고 AOL은 심각한 실수를 저질렀다. ‘재식별화’는 비식별화된 정보를 조합, 분석 또는 처리하는 과정에서 개인정보가 재생성 되는 것을 말한다. 뉴욕타임즈의 기자 2명이 AOL이 대중에 공개된 검색기록을 검토한 뒤 이것을 사용 가능한 다른 데이터와 교차검토하여 검색사용자의 신원 찾아낸 것이다. <span class="citation">[5]</span></p>
+</div>
+<div id="dp-math" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> 수식<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></h1>
+<p><span class="math inline">\(x\)</span>명에 대한 차이가 있는 <span class="math inline">\(D_1\)</span>, <span class="math inline">\(D_2\)</span> 데이터셋에 대해 <span class="math inline">\(\mathcal{A}\)</span> 알고리즘이 <span class="math inline">\(\epsilon\)</span> 차분 프라이버시를 제공한다고 다음과 같이 정의한다.</p>
+<p><span class="math display">\[\Pr[\mathcal{A}(D_1) \in S] \leq \exp\left(\epsilon\right) \cdot \Pr[\mathcal{A}(D_2) \in S]\]</span> 직관적으로 <span class="math inline">\(\epsilon\)</span>이 0이 되면 <span class="math inline">\(\exp\left(\epsilon\right) = 1\)</span> 이 되어 전혀 프라이버시가 보장되지 않는 상황이 되고 그 반대로 큰 값을 갖게 되면 식별이 더 어렵게 되는 특성을 갖게 된다.</p>
+<div id="laplace-distribution" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> 라플라스 분포</h2>
+<p><code>rmutil</code> 팩키지에서 라플라스 분포 특성을 살펴보자. 중심 모수는 <span class="math inline">\(\mu\)</span>, 형태 모수(shaping)는 <span class="math inline">\(s\)</span> 가 된다.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>x_seq_vec     <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="at">length=</span><span class="dv">1000</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>y_laplace_den <span class="ot">&lt;-</span> rmutil<span class="sc">::</span><span class="fu">dlaplace</span>(x_seq_vec, <span class="at">m =</span> <span class="dv">0</span>, <span class="at">s =</span> <span class="dv">1</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>laplace_tbl <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x =</span> x_seq_vec,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y =</span> y_laplace_den)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>laplace_tbl <span class="sc">%&gt;%</span> </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span> x, <span class="at">y=</span> y)) <span class="sc">+</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>(<span class="at">base_family =</span> <span class="st">&quot;NanumGothic&quot;</span>) <span class="sc">+</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;x&#39;</span>, <span class="at">y =</span> <span class="st">&#39;p(x)&#39;</span>, <span class="at">title =</span> <span class="st">&quot;라플라스 분포&quot;</span>)</span></code></pre></div>
+<p><img src="dp_files/figure-html/laplace-distribution-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>중심 모수 <span class="math inline">\(\mu\)</span> 가 0, 형태 모수 <span class="math inline">\(s\)</span> 가 1 인 라플라스 분포에서 난수를 1,000개 추출해보자.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>laplace_smpl_tbl <span class="ot">&lt;-</span> <span class="fu">tibble</span>( <span class="at">smpl =</span> rmutil<span class="sc">::</span><span class="fu">rlaplace</span>(<span class="dv">1000</span>, <span class="at">m =</span> <span class="dv">0</span>, <span class="at">s =</span><span class="dv">1</span>) )</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>laplace_smpl_tbl <span class="sc">%&gt;%</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> smpl)) <span class="sc">+</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..density..), <span class="at">fill =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">binwidth =</span> <span class="fl">0.5</span>)</span></code></pre></div>
+<p><img src="dp_files/figure-html/laplace-smpl-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="r-diffpriv" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> <code>diffpriv</code></h1>
+<p><a href="http://www.sis.pitt.edu/lersais/research/sahi/lab.html">SAHI</a> 과정에 포함된 Lab 과제를 살펴보자.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(diffpriv)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>all_result <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/hiv_result_test.csv&quot;</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>dataset <span class="ot">&lt;-</span> all_result<span class="sc">$</span>is_hiv</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>query <span class="ot">&lt;-</span> <span class="cf">function</span>(n){</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">sum</span>(dataset[<span class="dv">1</span><span class="sc">:</span>n])<span class="sc">/</span>n</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(p)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>dp_query <span class="ot">&lt;-</span> <span class="cf">function</span>(n, epsilon, sensitivity) {</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  mechanism <span class="ot">&lt;-</span> <span class="fu">DPMechLaplace</span>(<span class="at">target =</span> query, <span class="at">sensitivity =</span> sensitivity, <span class="at">dims =</span> <span class="dv">1</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  pparams <span class="ot">&lt;-</span> <span class="fu">DPParamsEps</span>(<span class="at">epsilon =</span> epsilon)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">releaseResponse</span>(<span class="at">mechanism =</span> mechanism, <span class="at">privacyParams =</span> pparams, <span class="at">X =</span> n)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(r<span class="sc">$</span>response)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">99</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>normal_res  <span class="ot">&lt;-</span> <span class="fu">query</span>(n)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>private_res <span class="ot">&lt;-</span> <span class="fu">dp_query</span>(n, <span class="dv">1</span>, <span class="dv">1</span><span class="sc">/</span>n)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;query(&quot;</span>, n, <span class="st">&quot;)</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>query( 99 )</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Private response :&quot;</span>, private_res, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">Non-private response : &quot;</span>, normal_res, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>Private response : 0.5004064 
+Non-private response :  0.5050505 </code></pre>
+<div id="dp-basics" class="section level2 unnumbered">
+<h2 class="unnumbered">기본기</h2>
+<div id="refs" class="references csl-bib-body">
+<div id="ref-park2017" class="csl-entry">
+1. 박석. 차분 프라이버시 기반 비식별화 기술 개발. 서강대학교 산학협력단; 2017.
+</div>
+<div id="ref-kim2017" class="csl-entry">
+2. KimHyun-il, ParkCheolhee, HongDowon, ChoiDaeseon. 금융 데이터 상에서의 차분 프라이버시 모델 정립 연구. 정보보호학회논문지. 2017;27:1519–34.
+</div>
+<div id="ref-narayanan2008robust" class="csl-entry">
+3. Narayanan A, Shmatikov V. Robust de-anonymization of large sparse datasets. In: 2008 IEEE symposium on security and privacy (sp 2008). IEEE; 2008. p. 111–25.
+</div>
+<div id="ref-ohm2009broken" class="csl-entry">
+4. Ohm P. Broken promises of privacy: Responding to the surprising failure of anonymization. UCLA l Rev. 2009;57:1701.
+</div>
+<div id="ref-barbaro2006face" class="csl-entry">
+5. Barbaro M, Zeller T, Hansell S. A face is exposed for AOL searcher no. 4417749. New York Times. 2006;9:8.
+</div>
+</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://en.wikipedia.org/wiki/Differential_privacy">Differential privacy from Wikipedia</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+
+&nbsp;
+<hr />
+<p style="text-align: center;">데이터 과학자 <a href="https://github.com/statkclee/">이광춘</a> 저작</p>
+<p style="text-align: center;">
+    <span style="color: #808080;"><em>kwangchun.lee.7@gmail.com</em></span>
+</p>
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+<!-- Add font awesome icons -->
+<p style="text-align: center;">
+    <a href="https://education.rstudio.com/trainers/people/lee+kwangchun/" class="fa fa-registered"></a>
+    <a href="https://www.facebook.com/groups/tidyverse/" class="fa fa-facebook"></a>
+    <a href="https://www.linkedin.com/in/kwangchunlee/" class="fa fa-linkedin"></a>
+    <a href="https://github.com/statkclee/" class="fa fa-github"></a>
+</p>
+&nbsp;
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

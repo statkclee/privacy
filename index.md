@@ -17,3 +17,4 @@ subtitle: Data Privacy and Anonymization
 1. [데이터 익명화](anonymization.html)
 1. [기계학습 모조 데이터](ml-fake-data.html)
 1. [K-익명성](k-anonymity.html)
+1. [차분 프라이버시(DP, Differential Privacy)](dp.html)
