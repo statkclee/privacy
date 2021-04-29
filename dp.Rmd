@@ -70,45 +70,13 @@ knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,
 
 교차검색을 통한 재식별화의 가능성을 차단하지 못하고 AOL은 심각한 실수를 저질렀다. '재식별화'는 비식별화된 정보를 조합, 분석 또는 처리하는 과정에서 개인정보가 재생성 되는 것을 말한다. 뉴욕타임즈의 기자 2명이 AOL이 대중에 공개된 검색기록을 검토한 뒤 이것을 사용 가능한 다른 데이터와 교차검토하여 검색사용자의 신원 찾아낸 것이다. [@barbaro2006face]
 
-# 수식 [^1] {#dp-math}
+# 핵심 개념 [@park2018dp] [^1] {#dp-math}
 
 [^1]: [Differential privacy from Wikipedia](https://en.wikipedia.org/wiki/Differential_privacy)
 
 $x$명에 대한 차이가 있는 $D_1$, $D_2$ 데이터셋에 대해 $\mathcal{A}$ 알고리즘이 $\epsilon$ 차분 프라이버시를 제공한다고 다음과 같이 정의한다.
 
 $$\Pr[\mathcal{A}(D_1) \in S] \leq \exp\left(\epsilon\right) \cdot \Pr[\mathcal{A}(D_2) \in S]$$ 직관적으로 $\epsilon$이 0이 되면 $\exp\left(\epsilon\right) = 1$ 이 되어 전혀 프라이버시가 보장되지 않는 상황이 되고 그 반대로 큰 값을 갖게 되면 식별이 더 어렵게 되는 특성을 갖게 된다.
-
-# `diffpriv` {#r-diffpriv}
-
-[SAHI](http://www.sis.pitt.edu/lersais/research/sahi/lab.html) 과정에 포함된 Lab 과제를 살펴보자.
-
-```{r diffpriv-lab}
-library(tidyverse)
-library(diffpriv)
-
-all_result <- read_csv("data/hiv_result_test.csv")
-dataset <- all_result$is_hiv
-
-query <- function(n){
-  p <- sum(dataset[1:n])/n
-  return(p)
-}
-
-dp_query <- function(n, epsilon, sensitivity) {
-  mechanism <- DPMechLaplace(target = query, sensitivity = sensitivity, dims = 1)
-  pparams <- DPParamsEps(epsilon = epsilon)
-  r <- releaseResponse(mechanism = mechanism, privacyParams = pparams, X = n)
-  return(r$response)
-}
-
-n <- 99
-normal_res  <- query(n)
-private_res <- dp_query(n, 1, 1/n)
-cat("query(", n, ")\n")
-cat("Private response :", private_res, "\nNon-private response : ", normal_res, "\n")
-```
-
-## 핵심 개념 [@park2018dp] {#dp-basics}
 
 차분 프라이버시는 프라이버시 예산(Privacy Budget)을 도입하여 정보 공개에 따른 프라이버시 손실을 계량화시켰고, 차분 프라이버시는 원래 제작될 때 대용량의 데이터를 염두에 두고 개발이 되었다. 프라이버시 예산은 $\epsilon$으로 표기하고 프라이버시 유출과 다음과 같은 관계가 성립한다.
 
@@ -119,7 +87,7 @@ cat("Private response :", private_res, "\nNon-private response : ", normal_res, 
 
 따라서, 해당 데이터에 대해서 더 많은 프라이버시 보호를 위해서는 프라이버시 예산 $\epsilon$을 줄여야 한다.
 
-### 전역 민감도 {#sensitivity}
+## 전역 민감도 {#sensitivity}
 
 차분 프라이버시에서 **전역 민감도(Global Sensitivity)**는 특정 개인을 삽입 혹은 제거했을 때 생기는 변화량의 최대값, 즉 최악의 경우를 가정한다. 따라서, 데이터의 경계가 모호하거나 이상치가 큰 경우 민감도를 설정하기 어렵거나 지나치게 큰 값이 설정되는 문제도 함께 있다.
 
@@ -202,6 +170,16 @@ p4 <- draw_laplace_plot(3, 5, "green")
 
 라플라스 분포에서 난수를 `rmutil` 팩키지 `dlaplace()` 함수를 사용했지만 [`smoothmest`](https://cran.r-project.org/web/packages/smoothmest/) 팩키지 double exponetial 분포 즉, 라플라스 분포 난수 생성 함수 `rdoublex()`를 사용해도 동일한 결과를 얻을 수 있다.
 
+## 구성가능성 {#composibility} 
+
+데이터에 대한 질의가 거듭될수록 추가적인 정보 노출이 발생하므로 차분 프라이버시에서는 질의(query)를 수행할 수 있는 한계치를 정하는데 이를 프라이버시 예산(privacy budget, $\epsilon$)으로 조정하는데, 질의가 순차적으로 여러 번 수행되거나 데이터의 층화/그룹 집합에 대해 질의가 수행될 다른 접근법을 제시한다.
+
+1. 순차 구성(Sequential composition): 데이터에 순차적으로 여러번 질의(query)가 발생될 때 해당 쿼리 수만큼 프라이버시 예산을 나눠 처리한다. 즉, 프라이버시 예산 $\epsilon$은 $\sum_{i}(\epsilon_i )$가 된다.
+
+2. 병렬 구성(Parallel composition): 데이터에 대한 쿼리가 전체 영향을 받는 것이 아니라 성별에 따라 달리 쿼리가 발생할 경우 최대 프라이버시 예산을 사용한다. 즉, 프라이버시 예산 $\epsilon$은 $\text{max}(\epsilon_i )$가 된다.
+
+
+
 # 적용 사례 {#case-study}
 
 `smoothmest` 팩키지 `rdoublex()` 라플라스 분포 난수 생성기를 사용할 때 특정해야되는 인수는 다음과 같다.
@@ -267,18 +245,135 @@ dp_proportion_hist(0.1) / dp_proportion_hist(1) / dp_proportion_hist(3)
 
 동일한 방식으로 연속형 변수의 평균과 분산에 대해서도 프라이버시 예산과 민감도를 반영하여 비식별화된 데이터를 공개할 수 있다.
 
-## 구성가능성 {#composibility} 
-
-데이터에 대한 질의가 거듭될수록 추가적인 정보 노출이 발생하므로 차분 프라이버시에서는 질의(query)를 수행할 수 있는 한계치를 정하는데 이를 프라이버시 예산(privacy budget, $\epsilon$)으로 조정하는데, 질의가 순차적으로 여러 번 수행되거나 데이터의 층화/그룹 집합에 대해 질의가 수행될 다른 접근법을 제시한다.
-
-1. 순차 구성(Sequential composition): 데이터에 순차적으로 여러번 질의(query)가 발생될 때 해당 쿼리 수만큼 프라이버시 예산을 나눠 처리한다. 즉, 프라이버시 예산 $\epsilon$은 $\sum_{i}(\epsilon_i )$가 된다.
-
-2. 병렬 구성(Parallel composition): 데이터에 대한 쿼리가 전체 영향을 받는 것이 아니라 성별에 따라 달리 쿼리가 발생할 경우 최대 프라이버시 예산을 사용한다. 즉, 프라이버시 예산 $\epsilon$은 $\text{max}(\epsilon_i )$가 된다.
 
 
-# 확장 {#laplace-extension}
+# 모수, 비모수 가공 데이터 {#laplace-extension}
 
+## 라플라스 Sanitizer {#laplace-sanitizer}
 
+라플라스 Sanitizer는 라플라스 메커니즘을 확장한 것으로 병렬 구성(Parallel Composition)을 결합시켜 히스토그램 혹은 분할표(Contingency Table)에 활용하는데 별도로 프라이버시 예산에 손을 댈 필요는 없다.
 
+먼저 세가지 정당 투표수를 구하는 경우를 상정해보자. 먼저 특정 선거구에서 비밀 여론조사를 통해서 다음과 같이 득표를 했다고 가정하자.
 
+- 민주당: 37 표
+- 국민의힘: 30 표
+- 정의당: 5 표
+
+상기 데이터를 라플라스 Sanitizer 를 적용하여 특정 선거구 가공 데이터를 만들어보자.
+
+```{r assume-party}
+# 기본 설정 -----
+epsilon <- 0.1
+global_sensitivity <- 1
+
+# 라플라스 메커니즘 -----
+minju_party   <- rdoublex(1, 37, global_sensitivity / epsilon) %>% max(0)
+people_party  <- rdoublex(1, 30, global_sensitivity / epsilon) %>%	max(0)
+justice_party <- rdoublex(1, 5, global_sensitivity / epsilon) %>% 	max(0)
+
+# 정당별 데이터 합성 -----
+minju_synth <- rep("minju", 37)
+people_synth <- rep("people", 30)
+justice_synth <- rep("justice", 5)
+
+# 정당별 투표 가공 데이터 -----
+
+votes_synth <- c(minju_synth, people_synth, justice_synth)
+
+tibble(votes = votes_synth) %>% 
+  count(votes) %>% 
+  mutate(prop = n / sum(n))
+```
+
+## 이항분포 {#laplace-binomial}
+
+특정 지역 여론조사 결과를 바탕으로 가공데이터를 만들어내는 것을 실습해보자.
+
+```{r binomial-example}
+set.seed(777)
+# 가상의 특정 지역 여론조사 결과
+polls <- rbinom(100, 1, prob = 0.37)
+
+# 기본 설정 -----
+n <- length(polls)
+epsilon <- 0.1
+gs_prop <- 1 / n
+
+# 라플라스 메커니즘 -----
+polls_prop_dp <- rdoublex(1, mean(polls), gs_prop / epsilon) 
+
+# 가공 데이터 생성 -----
+polls_synth <- rbinom(n, 1, polls_prop_dp)
+
+tibble(votes = polls_synth) %>% 
+  count(votes) %>% 
+  mutate(prop = n / sum(n))
+
+polls_synth
+```
+
+## 정규분포 {#laplace-normal}
+
+키와 몸무게, IQ처럼 정규분포를 따르는 가공데이터를 생성하는 것을 실습해보자.
+IQ는 $N(100, 15)$ 정규분포를 따른다고 보고 진행해보자.
+
+```{r normal-example}
+set.seed(777)
+# 가상의 특정 지역 여론조사 결과
+iq <- rnorm(100, mean = 100, sd = 15)
+
+# 기본 설정 -----
+n <- length(polls)
+epsilon <- 0.1
+a <- min(iq)
+b <- max(iq)
+
+gs_mean <- (b-a) / n
+gs_var  <- (b-a)^2 / n 
+
+# 라플라스 메커니즘 -----
+iq_mean_dp <- rdoublex(1, 100, gs_mean / epsilon)
+iq_var_dp  <- rdoublex(1, 15, gs_var / epsilon)
+
+# 가공 데이터 생성 -----
+iq_synth <- rnorm(n, mean = iq_mean_dp, sd = sqrt(iq_var_dp))
+
+iq_synth[iq_synth > 150] <- 150
+iq_synth[iq_synth <  80] <- 80
+
+tibble(iq = iq_synth) %>% 
+  summarise_at(vars(iq), list(mean = mean, sd = sd))
+
+iq
+```
+
+# `diffpriv` {#r-diffpriv}
+
+[SAHI](http://www.sis.pitt.edu/lersais/research/sahi/lab.html) 과정에 포함된 Lab 과제를 살펴보자.
+
+```{r diffpriv-lab}
+library(tidyverse)
+library(diffpriv)
+
+all_result <- read_csv("data/hiv_result_test.csv")
+dataset <- all_result$is_hiv
+
+query <- function(n){
+  p <- sum(dataset[1:n])/n
+  return(p)
+}
+
+dp_query <- function(n, epsilon, sensitivity) {
+  mechanism <- DPMechLaplace(target = query, sensitivity = sensitivity, dims = 1)
+  pparams <- DPParamsEps(epsilon = epsilon)
+  r <- releaseResponse(mechanism = mechanism, privacyParams = pparams, X = n)
+  return(r$response)
+}
+
+n <- 99
+normal_res  <- query(n)
+private_res <- dp_query(n, 1, 1/n)
+cat("query(", n, ")\n")
+cat("Private response :", private_res, "\nNon-private response : ", normal_res, "\n")
+```
 
