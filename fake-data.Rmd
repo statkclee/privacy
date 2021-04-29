@@ -1,12 +1,11 @@
 ---
 layout: page
 title: "개인정보와 익명화"
-subtitle: "가짜 데이터 (fake data)"
+subtitle: "가짜 데이터 (fake data): `R`"
 author:
-  - name: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
-    url: https://www.facebook.com/groups/tidyverse/
-    affiliation: Tidyverse Korea
-    affiliation_url: https://www.facebook.com/groups/tidyverse/
+- name: "이광춘"
+  affiliation: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
+tags: ["데이터 과학", "Data Science", "데이터 사이언스", "모조 데이터", "rstat", "R", "fake data", "K-Anonymity", "K-익명성"]
 date: "`r Sys.Date()`"
 output:
   html_document: 
